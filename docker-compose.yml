@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    depends_on:
+      - db
+    ports: 
+      - "8000:8000"
+    volumes:
+      - ./:/usr/src/app:ro
+    command: 
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - DB_HOSTNAME=db
+      - DB_PORT=5432
+      - DB_PASSWORD=mypass
+      - DB_NAME=myname
+      - DB_USERNAME=whoami
+  db: 
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=mypass
+      - POSTGRES_DB=myname
+      - POSTGRES_USER=whoami
+    volumes:
+      - tmobiledata:/var/lib/postgresql/data
+
+volumes:
+  tmobiledata:
